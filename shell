@@ -1,0 +1,290 @@
+ 
+ # Shell: very simple command shell
+ 
+ include stdlib
+ 
+.d0 READY\n
+.d1 >
+.d2 Going to run:
+.nl \n
+.help commands: help, halt, time, run\n
+.bye Bye!\n
+.run run:
+.tasks tasks:
+
+.c_help help
+.c_halt halt
+.c_time time
+.c_run run
+.c_ps ps
+
+%buf 50
+%cmd 50
+%ix 4
+%s1 4
+%s2 4
+
+
+
+
+# Reset the command buffer
+:reset
+ push 0
+ push %ix
+ store
+
+ push 0 
+ push %buf
+ store
+ret
+
+# Compate memory with data
+%m 4
+%t 4
+:is_cmd
+
+  swap
+  push %t
+  store
+  
+  swap
+  push %m
+  store
+  
+  push %m
+  load
+  call :str_len
+
+  push %t
+  load
+  call :str_lend
+  eq
+  not
+  
+  # Are the strings the same length?
+  skz 3
+  push 0
+  swap
+  ret
+  
+  # Compare the bytes
+  :loop
+  
+   push %t
+   load
+   load
+   
+   push %m
+   load
+   load
+   
+   eq
+   not
+   skz 3
+   push 0
+   swap
+   ret
+   
+   # Increment %t
+   push %t
+   load
+   push 1
+   add
+   push %t
+   store
+   
+   # Increment %m
+   push %m
+   load
+   push 1
+   add
+   push %m
+   store
+      
+   push %m
+   load
+   load
+      
+   jumpc :loop
+   
+   push 1
+   swap
+     
+ret
+
+
+ 
+:cmd_halt
+  push .bye
+  call :print
+  halt
+  
+:cmd_help
+  push .help
+  call :print
+  ret
+  
+:cmd_ps
+
+  %count 2
+
+  push .tasks
+  call :print
+  push 10
+  out
+
+  push 110
+  sys
+
+  :loop
+
+    push -1
+    add
+    push 46
+    out
+    jumpc :loop
+
+
+  ret
+
+:cmd_time
+
+  %time 30
+  push %time
+  push 101
+  sys 
+  
+  push %time
+  call :print
+  
+  push .nl
+  call :print
+      
+  ret 
+ 
+
+
+:run
+
+
+ # Write a terminating /0
+ push 0
+ push %buf
+ push %ix
+ load
+ add
+ store
+ 
+ push %buf
+ call :str_len
+ push 0
+ eq
+ skz 1
+ ret
+ 
+ push .nl
+ call :print
+
+ push %buf
+ push .c_halt
+ call :is_cmd
+ skz 2
+ call :cmd_halt
+ ret
+ 
+ push %buf
+ push .c_help
+ call :is_cmd
+ skz 2
+ call :cmd_help
+ ret
+ 
+ push %buf
+ push .c_time
+ call :is_cmd
+ skz 2
+ call :cmd_time
+ ret
+
+ push %buf
+ push .c_ps
+ call :is_cmd
+ skz 2
+ call :cmd_ps
+ ret
+
+ push 13
+ out
+
+ push %buf
+ push 102
+ sys
+
+ret
+
+
+
+:read_command
+
+ call :reset
+
+ push .d1
+ call :print
+ push 32
+ out
+
+ :loop
+
+   in
+  
+   # Did the user press enter?
+   dup
+   push 10
+   eq
+   skz 4
+   pop
+   call :run
+   call :reset
+   jump :read_command
+
+   # Echo back the char
+   dup
+   out
+
+   # Store the char in %buf
+   push %ix
+   load
+   push %buf
+   add
+   store
+
+   # Increment the buf
+   push %ix
+   load
+   push 1
+   add
+   push %ix
+   store
+
+   # Place \0 at end of buf
+   push 0
+   push %buf
+   push %ix
+   load
+   add
+   store
+   
+   jump :loop
+
+
+:main
+
+
+ push .d0
+ call :print
+ 
+ call :read_command
+
+halt
+
+

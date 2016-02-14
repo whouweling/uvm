@@ -1,0 +1,110 @@
+
+# STDLIB: usefull utility functions
+
+
+# Print a string to out
+:print
+  swap
+  :next
+   dup
+   load
+   out
+   push 1
+   add
+   dup
+   load
+  jumpc :next
+  pop
+ret
+
+# String length
+%len 2
+%s1 2
+:str_len
+
+  swap
+  push %s1
+  store
+  
+  push 0
+  push %len
+  store
+  
+  :next
+  
+  push %len
+  load
+  push 1
+  add
+  push %len
+  store
+  
+  push %s1
+  load
+  dup
+  
+  push 1
+  add
+  push %s1
+  store
+  
+  load
+  
+  jumpc :next
+ 
+  push %len
+  load
+  push -1
+  add
+  swap
+ret
+
+
+# String length (d)
+%len 4
+:str_lend
+
+  swap
+  push %s1
+  store
+  
+  push 0
+  push %len
+  store
+  
+  :next
+  
+  push %len
+  load
+  push 1
+  add
+  push %len
+  store
+  
+  push %s1
+  load
+  dup
+  
+  push 1
+  add
+  push %s1
+  store
+  
+  load
+  
+  jumpc :next
+ 
+  push %len
+  load
+  push -1
+  add
+  swap
+
+ret
+
+# Start a new task
+:spawn
+ swap
+ push 102
+ sys
+ret

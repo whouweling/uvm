@@ -1,0 +1,28 @@
+%i 2
+:main
+
+  push 0
+  push %i
+  istore
+
+  :loop
+
+    push %i
+    iload
+    push 1
+    add
+    dup
+    push %i
+    istore
+
+    push 10000000
+    eq
+    skz 1
+    halt
+
+    #push 46
+    #out
+
+   jump :loop
+
+halt

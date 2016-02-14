@@ -1,0 +1,97 @@
+  trace 1
+
+include stdlib
+
+.start Starting test
+.end Completed tests\n
+
+:call_test
+  push 42
+  swap
+  ret
+
+:main
+
+  # Push
+  push 1
+  assert 1
+  
+  # Pop
+  push 5
+  push 42
+  pop
+  assert 5
+   
+  # Basic math
+  push 5
+  push 7
+  add
+  assert 12
+  
+  # EQ
+  push 7
+  push 7
+  eq
+  assert 1
+  push 7
+  push 5
+  eq
+  assert 0
+  
+  # Swap
+  push 2
+  push 5
+  swap
+  assert 2
+  pop
+  
+  # SKZ
+  push 4
+  push 0
+  skz 1
+  push 8
+  assert 4
+ 
+  # Call
+  call :call_test
+  assert 42
+  
+  # Dup
+  push 5
+  dup
+  add
+  assert 10
+   
+  trace 1 
+  # Store / load
+  %i 1
+  push 42
+  push %i
+  store
+  push %i
+  load
+  assert 42
+  
+  # IStore / Iload
+  %i 4
+  push 4069
+  push %i
+  istore
+  push %i
+  iload
+  assert 4069
+  
+  
+  # Text
+  .t1 filler
+  .t2 a
+  .t3 dummy
+  push .t2
+  load
+  assert 97
+  
+
+  push .end
+  call :print
+
+halt

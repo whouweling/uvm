@@ -1,0 +1,30 @@
+.t20 count
+.t12 Done!\n
+.t21 Spawning job ...\n
+include stdlib
+:main
+%a 4
+push 0
+push %a
+istore
+:loop1
+push %a
+iload
+push 5
+eq
+not
+skz 11
+push %a
+iload
+push 1
+add
+push %a
+istore
+push .t20
+call :spawn
+push .t21
+call :print
+jump :loop1
+push .t12
+call :print
+halt

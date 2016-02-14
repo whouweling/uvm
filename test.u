@@ -1,0 +1,9 @@
+
+include stdlib
+
+:test()
+    ret 42
+
+:main()
+    int a
+    a = test()

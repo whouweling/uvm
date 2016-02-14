@@ -1,0 +1,9 @@
+.count count
+
+:main
+ :loop
+ push .count
+ sys
+
+ jump :loop
+ halt
