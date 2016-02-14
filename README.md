@@ -17,8 +17,7 @@ commands: help, halt, time, run
 > count
 spawned new task 'count' as 102
 load 'count' into 'count' (102)
-appending on 0
-> task 'count' (102) completed
+task 'count' (102) completed
 > time
 1455451168
 > halt
