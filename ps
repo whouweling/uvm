@@ -1,0 +1,63 @@
+
+include stdlib
+
+:main
+
+  %buf 30
+
+  push 110
+  sys
+
+
+  :loop
+
+    push -1
+    add
+    dup
+
+
+    push 111 # Get the id of the task
+    sys
+
+    # Covert to string
+    push %buf
+    swap
+
+    push 201
+    sys
+
+    push %buf
+    call :print
+
+    push 32
+    out
+
+    dup
+
+    push 113 # Get the status of the task
+    sys
+    out
+
+    push 32
+    out
+
+    dup
+
+    push %buf
+    swap
+    push 112 # Get the name of the task
+    sys
+
+    push %buf
+    call :print
+
+    push 10
+    out
+
+    dup
+
+    jumpc :loop
+
+  halt
+
+

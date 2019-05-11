@@ -1,0 +1,16 @@
+
+
+:sys_spawn
+    swap
+    push 102 # Spawn
+    sys
+    swap
+    ret
+
+:sys_wait_task
+    swap
+    push 103 # Wait for the task to complete
+    sys
+    swap
+    ret
+

@@ -1,0 +1,3 @@
+
+#define posix
+//#define cpm

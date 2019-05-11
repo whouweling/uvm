@@ -1,0 +1,61 @@
+.c_time time
+.c_stat stat
+
+.tasks tasks:
+.inuse inuse:
+.nl \n
+
+include stdlib
+
+:main
+
+  %buf 30
+
+  # Print task count:
+
+  push 110
+  sys
+
+  push %buf
+  swap
+  push 201
+  sys
+
+  push .tasks
+  call :print
+
+  push 32
+  out
+
+  push %buf
+  call :print
+
+
+  push .nl
+  call :print
+
+  # Print memory in use:
+
+  push 120
+  sys
+
+  push %buf
+  swap
+  push 201
+  sys
+
+  push .inuse
+  call :print
+
+  push 32
+  out
+
+  push %buf
+  call :print
+
+
+  push 10
+  out
+
+
+halt

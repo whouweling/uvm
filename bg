@@ -1,0 +1,42 @@
+ 
+# Shell: very simple command shell
+ 
+include stdlib
+include syscall
+
+.d1 bg>
+
+%buf 50
+%cmd 50
+%ix 4
+%s1 4
+%s2 4
+
+:main
+
+ push .d1
+ call :print
+ push 32
+ out
+
+ push %buf
+ call :read_line
+
+
+ push %buf
+ call :str_len
+ push 0
+ eq
+ skz 1 # Empty line?
+     halt
+
+ push %buf
+ call :sys_spawn
+
+ push %buf
+ sys 201
+
+
+halt
+
+

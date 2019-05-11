@@ -1,0 +1,30 @@
+
+.prompt abort:
+
+include stdlib
+include syscall
+
+:main
+
+    %buf 20
+    %task_id 2
+
+    push .prompt
+    call :print
+
+    push 32
+    out
+
+    push %buf
+    call :read_line
+
+    push %buf
+    push 202
+    sys
+
+    push 104
+    sys
+
+    halt
+
+

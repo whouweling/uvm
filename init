@@ -1,0 +1,19 @@
+.t20 shell
+.t12 init system ...\n
+
+include syscall
+include stdlib
+
+:main
+
+    push .t12
+    call :print
+
+    #trace 1
+
+    push .t20
+    push 102
+    sys
+    pop
+    halt
+
