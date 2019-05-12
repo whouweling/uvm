@@ -10,7 +10,7 @@ istore
 :loop1
 push %a
 iload
-push 5
+push 2
 eq
 not
 skz 11

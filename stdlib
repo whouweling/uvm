@@ -1,14 +1,20 @@
 
-# STDLIB: usefull utility functions
+# STDLIB: useful utility functions
+
 
 
 # Print a string to out
 :print
-  swap
+  
+  isp 1
+
   :next
+
    dup
+
    load
    out
+
    push 1
    add
    dup
@@ -102,9 +108,69 @@ ret
 
 ret
 
-# Start a new task
-:spawn
+
+
+%rl_buf 2
+%rl_ix 2
+:read_line
+
+ #trace 1
+
  swap
- push 102
- sys
-ret
+ push %rl_buf
+ store
+
+ push 0
+ push %rl_ix
+ store
+
+ :read_line_loop
+
+   #trace 1
+
+   in
+
+   # Did the user press enter?
+   dup
+   push 10
+   eq
+
+   skz 4
+       push 10
+       out
+       trace 0
+       ret
+
+   # Echo back the char
+   dup
+   out
+
+   # Store the char in %buf
+   push %rl_ix
+   load
+   push %rl_buf
+   load
+   add
+   store
+
+   # Increment the buf
+   push %rl_ix
+   load
+   push 1
+   add
+   push %rl_ix
+   store
+
+   # Place \0 at end of buf
+   push 0
+   push %rl_buf
+   load
+   push %rl_ix
+   load
+   add
+   store
+
+   jump :read_line_loop
+
+
+

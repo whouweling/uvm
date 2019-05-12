@@ -1,5 +1,14 @@
+
+.done . done!
+.start starting ...
+
+include stdlib
+
 %i 2
 :main
+
+  push .start
+  call :print
 
   push 0
   push %i
@@ -17,12 +26,17 @@
 
     push 10000000
     eq
-    skz 1
-    halt
+    skz 5
+      push .done
+      call :print
+      push 10
+      out
+      halt
 
     #push 46
     #out
 
    jump :loop
+
 
 halt

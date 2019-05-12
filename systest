@@ -61,8 +61,8 @@ include stdlib
   dup
   add
   assert 10
-   
-  trace 1 
+  
+  trace 0
   # Store / load
   %i 1
   push 42

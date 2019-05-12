@@ -1,8 +1,9 @@
  
  # Shell: very simple command shell
- 
- include stdlib
- 
+
+include stdlib
+include syscall
+
 .d0 READY\n
 .d1 >
 .d2 Going to run:
@@ -10,13 +11,11 @@
 .help commands: help, halt, time, run\n
 .bye Bye!\n
 .run run:
-.tasks tasks:
 
 .c_help help
-.c_halt halt
+.c_halt bye
+
 .c_time time
-.c_run run
-.c_ps ps
 
 %buf 50
 %cmd 50
@@ -29,16 +28,12 @@
 
 # Reset the command buffer
 :reset
- push 0
- push %ix
- store
-
- push 0 
- push %buf
- store
+  push 0
+  push %buf
+  store
 ret
 
-# Compate memory with data
+# Compare memory with data
 %m 4
 %t 4
 :is_cmd
@@ -112,8 +107,6 @@ ret
      
 ret
 
-
- 
 :cmd_halt
   push .bye
   call :print
@@ -122,29 +115,6 @@ ret
 :cmd_help
   push .help
   call :print
-  ret
-  
-:cmd_ps
-
-  %count 2
-
-  push .tasks
-  call :print
-  push 10
-  out
-
-  push 110
-  sys
-
-  :loop
-
-    push -1
-    add
-    push 46
-    out
-    jumpc :loop
-
-
   ret
 
 :cmd_time
@@ -161,20 +131,9 @@ ret
   call :print
       
   ret 
- 
-
 
 :run
 
-
- # Write a terminating /0
- push 0
- push %buf
- push %ix
- load
- add
- store
- 
  push %buf
  call :str_len
  push 0
@@ -182,9 +141,6 @@ ret
  skz 1
  ret
  
- push .nl
- call :print
-
  push %buf
  push .c_halt
  call :is_cmd
@@ -206,21 +162,21 @@ ret
  call :cmd_time
  ret
 
+
  push %buf
- push .c_ps
- call :is_cmd
- skz 2
- call :cmd_ps
+
+ call :sys_spawn
+
+
+ # Did we not get a error back?
+ dup
+ push -1
+ eq
+ not
+ skz 1
+  call :sys_wait_task
+
  ret
-
- push 13
- out
-
- push %buf
- push 102
- sys
-
-ret
 
 
 
@@ -233,52 +189,14 @@ ret
  push 32
  out
 
- :loop
+ push %buf
+ call :read_line
 
-   in
-  
-   # Did the user press enter?
-   dup
-   push 10
-   eq
-   skz 4
-   pop
-   call :run
-   call :reset
-   jump :read_command
+ call :run
 
-   # Echo back the char
-   dup
-   out
-
-   # Store the char in %buf
-   push %ix
-   load
-   push %buf
-   add
-   store
-
-   # Increment the buf
-   push %ix
-   load
-   push 1
-   add
-   push %ix
-   store
-
-   # Place \0 at end of buf
-   push 0
-   push %buf
-   push %ix
-   load
-   add
-   store
-   
-   jump :loop
-
+ jump :read_command
 
 :main
-
 
  push .d0
  call :print

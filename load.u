@@ -3,10 +3,9 @@ include stdlib
 
 :main()
 
-
  int a
  a = 0
- while a != 5
+ while a != 2
     a = a + 1
     spawn("count")
     print("Spawning job ...\n")

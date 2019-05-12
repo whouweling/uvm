@@ -1,19 +1,43 @@
 .t20 shell
 .t12 init system ...\n
 
-include syscall
+#include syscall
 include stdlib
+
+
+:test
+
+ $a 1
+ $b 0
+ 
+ isp 2
+  
+ push $a
+ push
+ load
+ out
+
+ ret
 
 :main
 
+ #  trace 1
+
+  # push 2
+ #  push 43
+#   dsp 2
+#   call :test
+
+
     push .t12
+    dsp 1
     call :print
 
     #trace 1
 
-    push .t20
-    push 102
-    sys
-    pop
+#    push .t20
+#    push 102
+#    sys
+#    pop
     halt
 
