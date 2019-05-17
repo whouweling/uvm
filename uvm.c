@@ -156,7 +156,7 @@ void * allocate(int size, int line) {
 int lbl_lookup(struct task * t, char * name, int line) {
    struct label * s = t->labels;
    while(s) {
-      printf(" lbl %s == %s\n", s->name, name);
+      //printf(" lbl %s == %s\n", s->name, name);
       if(strcmp(s->name, name) == 0) {
          return s->address;
       }
@@ -208,7 +208,7 @@ struct task * spawn(char * name) {
    t->pc = t->prg;
    t->tracing = 0;
    t->length = 0;
-   t->sc = t->stack + 2 * sizeof(int *); /* The extra space is the stack underflow protection */
+   t->sc = (int*) (t->stack + 2 * sizeof(int *)); /* The extra space is the stack underflow protection */
    t->cs = t->cstack;
    t->mc = 0;
    t->ready = 1;
@@ -337,7 +337,7 @@ bool load(struct task * t, char * source, struct label * labels) {
 
          line ++;
 
-         printf("Got: '%s'\n", cmd);
+         //printf("Got: '%s'\n", cmd);
 
          *c='\0';
          *p='\0';
@@ -347,7 +347,7 @@ bool load(struct task * t, char * source, struct label * labels) {
             if(cmd[0] == ':') {
                 lbl_register(t, cmd, t->pc - t->prg);
                 if(par) {
-                   printf("reserve %d on stack ..\n", atoi(par));
+                   //printf("reserve %d on stack ..\n", atoi(par));
 
                 }
             } else {
@@ -386,7 +386,7 @@ bool load(struct task * t, char * source, struct label * labels) {
                   t->mc = t->mc + s_length;
 
                } else if (cmd[0] == '$') {
-                  printf("local var %s %d\n", cmd, atoi(par));
+                  //printf("local var %s %d\n", cmd, atoi(par));
                   lbl_register(t, cmd, atoi(par));
                } else {
 
@@ -430,7 +430,7 @@ bool load(struct task * t, char * source, struct label * labels) {
                        if(t->pc->par == -1) {
                             printf("error: label '%s' not found (line %d)\n", par, line);
                             task_abort(t, 0);
-                            return;
+                            return false;
                        }
                      } else {
                         t->pc->par = atoi(par);
@@ -455,13 +455,13 @@ bool load(struct task * t, char * source, struct label * labels) {
                             && t->pc->par == -1) {
                             printf("error: label '%s' not found (line %d)\n", par, line);
                             task_abort(t, 0);
-                            return;
+                            return false;
                        }
 
                      if(! t->pc->op) {
                         printf("error: unkown op '%s' on line %d\n", cmd, line);
                         task_abort(t, 0);
-                        return;
+                        return false;
                      }
 
                      t->pc->src = line;
@@ -527,7 +527,7 @@ bool load(struct task * t, char * source, struct label * labels) {
 }
 
 void debug_stack(struct task * t, int * s) {
-   int * ds = t->stack;
+   int * ds = (int*) t->stack;
    while(ds != s) {
       printf("[%d]", *ds);
       ds++;
@@ -628,7 +628,7 @@ int * sys_call(struct task * t, int * s) {
 
 }
 
-char * nbgetc() {
+char nbgetc() {
 
   char c;
 
@@ -735,7 +735,7 @@ void run(struct task * t) {
 
          case FP:
             *s = t->fp;
-            printf("fp %d\n", *s);
+            //printf("fp %d\n", *s);
             s++;
             break;
 
@@ -747,7 +747,7 @@ void run(struct task * t) {
 
          case IN:
             *s = nbgetc();
-            if(*s == NULL) {
+            if(*s == 0) {
                tslice = 0;
                continue;
             }
@@ -806,17 +806,17 @@ void run(struct task * t) {
 	        s--;
            
            *s = *(t->fp + *(s));
-           printf("fload %d (fp=%d)\n", *s);
+           //printf("fload %d (fp=%d)\n", *s);
            s++;
            break;            
 
          case CALL:
             *c = i - t->prg; c++;
-            *c = t->fp - (int*) stack; printf("fp @ %d\n", *c); c++;
-            *c = s - (int *) stack; printf("stack @ %d\n", *c); c++;
+            *c = t->fp - (int*) stack; c++;
+            *c = s - (int *) stack; c++;
             i = t->prg + i->par - 1;
             t->fp = s;
-            printf("set fp to: %d\n", t->fp);
+            //printf("set fp to: %d\n", t->fp);
             break;
 
          case RET:

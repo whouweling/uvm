@@ -19,6 +19,7 @@
    add
    dup
    load
+
   jumpc :next
   pop
 ret

@@ -198,6 +198,8 @@ ret
 
 :main
 
+ trace 1
+
  push .d0
  call :print
  

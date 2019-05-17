@@ -1,7 +1,7 @@
 .t20 shell
 .t12 init system ...\n
 
-#include syscall
+include syscall
 include stdlib
 
 
@@ -35,9 +35,9 @@ include stdlib
 
     #trace 1
 
-#    push .t20
-#    push 102
-#    sys
-#    pop
+    push .t20
+    push 102
+    sys
+    pop
     halt
 
